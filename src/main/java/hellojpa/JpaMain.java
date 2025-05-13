@@ -4,6 +4,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
+import jakarta.persistence.RollbackException;
 import java.util.List;
 
 public class JpaMain {
@@ -16,15 +17,24 @@ public class JpaMain {
         tx.begin();
 
         try {
-            // 영속
-            Member member = em.find(Member.class, 150L);
-            member.setName("AAAA");
+            Member member = new Member();
+            member.setId(1L);
+            member.setUsername("A");
+            member.setRoleType(RoleType.USER);
 
-            em.clear();
+            Member member2 = new Member();
+            member2.setId(2L);
+            member2.setUsername("A");
+            member2.setRoleType(RoleType.USER);
 
-            Member member2 = em.find(Member.class, 150L);
+            Member member3 = new Member();
+            member3.setId(3L);
+            member3.setUsername("B");
+            member3.setRoleType(RoleType.GUEST);
 
-            System.out.println("=====");
+            em.persist(member2);
+            em.persist(member3);
+
             tx.commit();
         } catch (Exception e) {
             tx.rollback();
